@@ -101,7 +101,7 @@ Analysed the saved capture using:
 | ARP | 520 | 31,164 |
 | ICMP | 0 | 0 |
 
-**Observation:** The capture contained 532 ARP frames and no ICMP frames. This indicates that ARP was the observed protocol used for host discovery during this capture.
+**Observation:** The capture contained 520 ARP frames and no ICMP frames. This indicates that ARP was the observed protocol used for host discovery during this capture.
 
 ### Step 5: Identify the Source of ARP Requests
 
