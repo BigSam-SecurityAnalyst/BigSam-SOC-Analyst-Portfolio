@@ -163,3 +163,16 @@ A SOC analyst should investigate the source endpoint, establish whether the acti
 This project provided practical experience in identifying network reconnaissance through host discovery and packet-level traffic analysis.
 
 By combining Nmap and TShark, I demonstrated how a SOC analyst can identify the source of network discovery activity, examine ARP traffic, quantify destination diversity, and interpret potential reconnaissance behaviour within an isolated network environment.
+## Evidence and Screenshots
+
+### 1. Network Connectivity Test – Kali to Metasploitable 2
+![Kali Ping Test](screenshots/01-kali-ping-metasploitable.png)
+
+### 2. ICMP Traffic Capture Using TShark
+![TShark ICMP Capture](screenshots/02-tshark-icmp-traffic-capture.png)
+
+### 3. Nmap Host Discovery
+![Nmap Host Discovery](screenshots/03-nmap-host-discovery.png)
+
+### 4. TShark ARP Investigation Analysis
+![TShark ARP Analysis](screenshots/04-tshark-arp-investigation-analysis.png)
