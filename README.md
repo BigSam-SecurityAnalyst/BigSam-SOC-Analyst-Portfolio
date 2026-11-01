@@ -166,13 +166,13 @@ By combining Nmap and TShark, I demonstrated how a SOC analyst can identify the 
 ## Evidence and Screenshots
 
 ### 1. Network Connectivity Test – Kali to Metasploitable 2
-![Kali Ping Test](screenshots/01-kali-ping-metasploitable.png)
+![Kali Ping Test](screenshots/01-kali-ping-metasploitable.png.png)
 
 ### 2. ICMP Traffic Capture Using TShark
-![TShark ICMP Capture](screenshots/02-tshark-icmp-traffic-capture.png)
+![TShark ICMP Capture](screenshots/02-tshark-icmp-traffic-capture.png.png)
 
 ### 3. Nmap Host Discovery
-![Nmap Host Discovery](screenshots/03-nmap-host-discovery.png)
+![Nmap Host Discovery](screenshots/03-nmap-host-discovery.png.png)
 
 ### 4. TShark ARP Investigation Analysis
-![TShark ARP Analysis](screenshots/04-tshark-arp-investigation-analysis.png)
+![TShark ARP Analysis](screenshots/04-tshark-arp-investigation-analysis.png.png)
