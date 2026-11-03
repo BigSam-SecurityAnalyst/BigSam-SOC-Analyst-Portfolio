@@ -64,3 +64,27 @@ flowchart TB
 The Ubuntu Desktop and Ubuntu Server use Kali Linux (`192.168.56.101`) as their configured default gateway. Metasploitable 2 is connected to the same host-only subnet without that gateway configuration.
 
 This environment provides a controlled platform for testing network activity, collecting security telemetry, and investigating events centrally through Wazuh.
+
+## 3. Wazuh SIEM Deployment
+
+Wazuh was deployed on the Ubuntu Server (`192.168.56.112`) as the central Security Information and Event Management (SIEM) platform.
+
+The deployment consists of three main components:
+
+| Component | Function |
+|---|---|
+| Wazuh Manager | Collects and analyses security events from connected agents. |
+| Wazuh Indexer | Stores and indexes security event data for searching and analysis. |
+| Wazuh Dashboard | Provides a web interface for security monitoring, alert analysis, and investigation. |
+
+### Service Verification
+
+After installation, I verified that the three Wazuh services were running successfully using:
+
+```bash
+sudo systemctl status wazuh-manager wazuh-indexer wazuh-dashboard
+```
+
+All three services were confirmed as active on the Ubuntu Server.
+
+This established the central SIEM infrastructure for receiving and investigating security telemetry from the lab environment.
