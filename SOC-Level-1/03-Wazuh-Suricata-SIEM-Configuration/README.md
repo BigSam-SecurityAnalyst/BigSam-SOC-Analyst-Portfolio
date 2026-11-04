@@ -350,30 +350,97 @@ After completing the Wazuh and Suricata integration, validation was performed to
 | Suricata EVE JSON | Inspected `/var/log/suricata/eve.json` | Events generated |
 | Wazuh–Suricata Integration | Searched for Suricata events in Wazuh Threat Hunting | Events received and displayed |
 
-### 7.2 Evidence from the Wazuh Dashboard
+### 7.2 Custom Suricata Rule Testing and Alert Validation
 
-The Wazuh Dashboard was used to review events from the Kali Linux agent.
+To further validate the Wazuh-Suricata integration, a custom Suricata detection rule was created to identify HTTP requests containing a specific URI string.
 
-The investigation returned 51 event hits within the selected Last 24 Hours time range. Suricata-generated alerts were visible, including:
+**Custom Detection Rule**
 
-- `ET INFO Spotify P2P Client`
-- `ET INFO Possible Kali Linux hostname in DHCP Request Packet`
+The rule was created in `/var/lib/suricata/rules/local.rules`:
 
-The displayed events included Wazuh rule ID `86601`, with a severity level of `3`.
+```suricata
+alert http $HOME_NET any -> any any (msg:"LOCAL SOC LAB - HTTP Test Request Detected"; flow:established,to_server; http.uri; content:"soc-lab-test"; sid:1000001; rev:2;)
+```
 
-These informational alerts demonstrated that Suricata events were successfully reaching the Wazuh monitoring platform.
+The `local.rules` file was added to the `rule-files` section of `/etc/suricata/suricata.yaml`, alongside the existing `suricata.rules` file.
 
-### 7.3 Final Project Outcome
+**Configuration Validation**
+
+The Suricata configuration was tested using:
+
+```bash
+sudo suricata -T -c /etc/suricata/suricata.yaml -v
+```
+
+The validation completed successfully, with 53,231 rules loaded and zero rule failures.
+
+**Generating Test Traffic**
+
+An HTTP request was generated from the Ubuntu Desktop endpoint (`192.168.56.111`) using:
+
+```bash
+curl -v --max-time 10 http://example.com/soc-lab-test
+```
+
+**Alert Detection and Verification**
+
+Suricata successfully detected the HTTP request and generated an alert with the following details:
+
+- **Signature:** LOCAL SOC LAB - HTTP Test Request Detected
+- **Signature ID:** 1000001
+- **Source IP:** 192.168.56.111
+- **Destination Port:** 80
+- **Protocol:** TCP
+- **Severity:** 3
+- **Monitoring Interface:** eth1
+
+The alert was recorded in `/var/log/suricata/eve.json`. The Kali Wazuh agent was configured to collect this JSON log for centralized monitoring.
+
+The alert was also verified in the Wazuh Dashboard, demonstrating the integration of custom Suricata detection events with the SIEM platform.
+
+This exercise demonstrated the ability to create custom IDS detection rules, generate controlled test traffic, analyze security events, and integrate Suricata with Wazuh.
+
+### 7.3 Project Evidence and Screenshots
+
+The following screenshots provide visual evidence of the Wazuh and Suricata deployment, agent connectivity, log collection configuration, and custom alert detection.
+
+**Screenshot 01 – Wazuh Dashboard**
+
+![Wazuh Dashboard](screenshots/01-wazuh-dashboard.png.png)
+
+**Screenshot 02 – Wazuh Agent Status**
+
+![Wazuh Agents](screenshots/02-wazuh-agents.png.png)
+
+**Screenshot 03 – Suricata Service Status**
+
+![Suricata Service](screenshots/03-suricata-service.png.png)
+
+**Screenshot 04 – Suricata EVE JSON Logs**
+
+![Suricata EVE Logs](screenshots/04-suricata-eve-logs.png.png)
+
+**Screenshot 05 – Wazuh-Suricata Log Configuration**
+
+![Wazuh Suricata Configuration](screenshots/05-wazuh-suricata-config.png.png)
+
+**Screenshot 06 – Custom Suricata Alert in Wazuh**
+
+![Custom Suricata Alert](screenshots/06-custom-suricata-alert-in-wazuh.png.png)
+
+### 7.4 Final Project Outcome
 
 The SOC home lab successfully demonstrated:
 
 1. Deployment of a centralized Wazuh SIEM environment.
 2. Installation and connection of Linux endpoint agents.
-3. Deployment of Suricata as a network intrusion detection system.
+3. Deployment of Suricata as a Network Intrusion Detection System (NIDS).
 4. Configuration of Wazuh to collect Suricata EVE JSON logs.
-5. Centralized visibility of Suricata-generated events through the Wazuh Dashboard.
+5. Centralized visibility of Suricata-generated security events through the Wazuh Dashboard.
+6. Creation and testing of a custom Suricata detection rule.
 
-**Conclusion:** This project established a functional home-based SOC monitoring environment using open-source security tools. It provided practical experience in SIEM deployment, endpoint monitoring, network intrusion detection, log collection, event forwarding, and security event analysis.
+**Conclusion:** This project established a functional home-based SOC monitoring environment using open-source security tools. It provided practical experience in SIEM deployment, endpoint monitoring, network intrusion detection, log collection, event forwarding, custom rule creation, and security event analysis.
+
 ## 8. Skills Demonstrated and Key Takeaways
 
 ### 8.1 Technical Skills Demonstrated
@@ -386,6 +453,7 @@ Through this project, I gained practical experience in the following areas:
 - **Network Intrusion Detection:** Installed and configured Suricata to monitor network traffic.
 - **Log Collection and Analysis:** Worked with Suricata EVE JSON logs and configured Wazuh to collect security events.
 - **SIEM Integration:** Integrated Suricata with Wazuh for centralized security event monitoring.
+- **Custom Detection Rules:** Created and tested a Suricata rule to detect specific HTTP requests.
 - **Security Event Investigation:** Used Wazuh Threat Hunting to review and interpret Suricata-generated events.
 - **Troubleshooting:** Resolved Wazuh repository signing and package-version issues during agent maintenance.
 
@@ -394,7 +462,7 @@ Through this project, I gained practical experience in the following areas:
 | Tool | Purpose |
 |---|---|
 | Wazuh | Security Information and Event Management (SIEM) |
-| Suricata | Network Intrusion Detection System (IDS) |
+| Suricata | Network Intrusion Detection System (NIDS) |
 | Kali Linux | Security testing and monitoring environment |
 | Ubuntu Server | Wazuh Manager, Indexer, and Dashboard |
 | Ubuntu Desktop | Monitored endpoint |
@@ -407,4 +475,4 @@ This project strengthened my understanding of how security monitoring components
 
 I learned how to deploy a SIEM platform, connect monitored endpoints, configure an IDS to generate network security events, forward logs to a central monitoring platform, and investigate the resulting events.
 
-Most importantly, I gained hands-on experience building and troubleshooting a multi-machine SOC home lab using open-source security technologies.
+Most importantly, I gained hands-on experience building, integrating, and troubleshooting a multi-machine SOC home lab using open-source security technologies.
