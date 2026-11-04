@@ -239,3 +239,62 @@ The EVE JSON log contained different event types, including:
 The log showed traffic being monitored on `eth1`. Suricata statistics also reported loaded detection rules and zero kernel packet drops in the observed sample.
 
 **Outcome:** Suricata was successfully deployed on Kali Linux, monitoring the lab interface and generating EVE JSON events for security monitoring and SIEM integration.
+## 6. Wazuh–Suricata Integration
+
+The next stage involved integrating Suricata with the Wazuh Agent installed on Kali Linux. This allowed Suricata network security events to be collected and forwarded to the Wazuh Manager for centralized monitoring and analysis.
+
+### 6.1 Configuring Wazuh to Collect Suricata Logs
+
+The Wazuh Agent configuration file was edited on Kali Linux:
+
+```bash
+sudo nano /var/ossec/etc/ossec.conf
+```
+
+The following configuration was added inside the `<ossec_config>` section:
+
+```xml
+<localfile>
+    <log_format>json</log_format>
+    <location>/var/log/suricata/eve.json</location>
+</localfile>
+```
+
+This configuration instructs the Wazuh Agent to monitor Suricata's EVE JSON log file and collect its security events.
+
+### 6.2 Restarting the Wazuh Agent
+
+After saving the configuration, the Wazuh Agent was restarted:
+
+```bash
+sudo systemctl restart wazuh-agent
+```
+
+The service status was checked:
+
+```bash
+sudo systemctl status wazuh-agent
+```
+
+The agent was confirmed to be active and running.
+
+### 6.3 Verifying Event Forwarding in Wazuh
+
+The Wazuh Dashboard was accessed from the Ubuntu Server.
+
+Under **Threat Hunting**, the Kali Linux agent was selected and events were reviewed using the Last 24 Hours time range.
+
+The investigation returned Suricata-generated events, including:
+
+- `Suricata: Alert - ET INFO Spotify P2P Client`
+- `Suricata: Alert - ET INFO Possible Kali Linux hostname in DHCP Request Packet`
+
+The events appeared under Wazuh rule ID `86601`, with a rule level of `3`.
+
+These were informational detection events and were not automatically classified as malicious activity.
+
+### 6.4 Integration Outcome
+
+The integration was successful. Suricata generated network security events on Kali Linux, the Wazuh Agent collected the events from `eve.json`, and the Wazuh Dashboard displayed them for centralized monitoring.
+
+**Key Takeaway:** This exercise provided hands-on experience integrating an open-source IDS with a SIEM, configuring JSON log collection, forwarding security events, and validating detection visibility through a centralized security monitoring dashboard.
