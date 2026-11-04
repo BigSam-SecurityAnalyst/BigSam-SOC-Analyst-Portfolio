@@ -127,26 +127,28 @@ All three services were confirmed as active on the Ubuntu Server.
 **Outcome:** Successfully established the central Wazuh SIEM infrastructure for collecting, indexing, and investigating security telemetry from the lab endpoints.
 ## 4. Wazuh Agent Installation and Configuration
 
-Wazuh agents were deployed on Kali Linux and Ubuntu Desktop to collect endpoint logs and forward security events to the Wazuh Manager running on Ubuntu Server.
+Wazuh Agents were deployed on Kali Linux and Ubuntu Desktop to collect endpoint security data and forward events to the central Wazuh Manager running on Ubuntu Server (`192.168.56.112`).
 
 ### 4.1 Agent Deployment Environment
 
-| Endpoint | IP Address | Wazuh Agent Version | Role |
+| Endpoint | IP Address | Wazuh Version | Role |
 |---|---|---|---|
-| Kali Linux | `192.168.56.101` | `4.14.9` | Suricata log collection |
+| Kali Linux | `192.168.56.101` | `4.14.9` | Endpoint and Suricata log collection |
 | Ubuntu Desktop | `192.168.56.111` | `4.14.9` | Endpoint monitoring |
-| Ubuntu Server | `192.168.56.112` | `4.14.9` | Wazuh Manager |
+| Ubuntu Server | `192.168.56.112` | `4.14.9` | Central Wazuh Manager |
 
-### 4.2 Adding the Wazuh APT Repository
+### 4.2 Configuring the Wazuh APT Repository
 
-The Wazuh repository and signing key were configured on the Linux endpoints to allow installation and management of the Wazuh Agent package.
+The Wazuh repository and signing key were configured to allow installation of the Wazuh Agent package.
+
+Install the required packages:
 
 ```bash
 sudo apt update
 sudo apt install curl gnupg apt-transport-https -y
 ```
 
-Import the Wazuh repository signing key:
+Import the Wazuh signing key:
 
 ```bash
 curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | \
@@ -165,12 +167,14 @@ sudo tee /etc/apt/sources.list.d/wazuh.list
 sudo apt update
 ```
 
-### 4.3 Installing and Configuring the Agent
+### 4.3 Installing the Wazuh Agent
 
-The Wazuh Agent was installed and configured to communicate with the Wazuh Manager at `192.168.56.112`.
+The same Wazuh Agent version (`4.14.9`) was deployed across Kali Linux and Ubuntu Desktop to maintain version consistency with the Wazuh Manager.
+
+Install the agent:
 
 ```bash
-sudo WAZUH_MANAGER="192.168.56.112" apt install wazuh-agent
+sudo WAZUH_MANAGER="192.168.56.112" apt install wazuh-agent=4.14.9-1
 ```
 
 Enable and start the agent service:
@@ -183,31 +187,25 @@ sudo systemctl start wazuh-agent
 
 ### 4.4 Agent Verification
 
-The agent service and installed version were checked using:
+Check the agent service:
 
 ```bash
 sudo systemctl status wazuh-agent
+```
+
+Verify the installed version:
+
+```bash
 sudo /var/ossec/bin/wazuh-control info
 ```
 
-The deployed agents were verified as Wazuh version `4.14.9` (revision `rc2`).
+The deployed agents were verified with the following version information:
 
-### 4.5 Ubuntu Desktop Agent Upgrade and Repository Troubleshooting
+- Wazuh Version: `4.14.9`
+- Revision: `rc2`
+- Type: `agent`
 
-During verification, the Ubuntu Desktop endpoint was initially running Wazuh Agent `4.14.6`, while the other components were on `4.14.9`.
-
-Investigation revealed that the Wazuh APT repository was disabled. The repository was enabled, the Wazuh signing key was imported, and the `Signed-By` repository configuration was corrected.
-
-The agent was then upgraded using:
-
-```bash
-sudo apt update
-sudo apt install wazuh-agent=4.14.9-1
-```
-
-The upgrade was verified with the Wazuh version command and systemd service status. The agent reported version `4.14.9` and its service was active and running.
-
-**Outcome:** The Wazuh Manager and both Linux agents were aligned on version `4.14.9`, providing a consistent SIEM deployment across the lab endpoints.
+**Outcome:** Successfully deployed and configured Wazuh Agents on Kali Linux and Ubuntu Desktop, using the same version as the central Wazuh Manager for consistent endpoint monitoring and security event collection.
 ## 5. Suricata Installation and Configuration
 
 Suricata was deployed on Kali Linux as the Network Intrusion Detection System (NIDS) for the SOC home lab. It monitors network traffic on the host-only interface and generates security events in JSON format.
