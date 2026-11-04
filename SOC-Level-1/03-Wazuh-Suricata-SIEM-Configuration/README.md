@@ -206,21 +206,16 @@ The deployed agents were verified with the following version information:
 - Type: `agent`
 
 **Outcome:** Successfully deployed and configured Wazuh Agents on Kali Linux and Ubuntu Desktop, using the same version as the central Wazuh Manager for consistent endpoint monitoring and security event collection.
-## 5. Suricata Installation and Configuration
+## 5. Suricata Installation and Event Logging
 
-Suricata was deployed on Kali Linux as the Network Intrusion Detection System (NIDS) for the SOC home lab. It monitors network traffic on the host-only interface and generates security events in JSON format.
+### 5.1 Installation
 
-### 5.1 Installing Suricata
+Suricata was deployed on Kali Linux (`192.168.56.101`) to monitor network traffic on the host-only lab interface.
 
-Update the Kali package repositories:
+The following commands represent the installation procedure:
 
 ```bash
 sudo apt update
-```
-
-Install Suricata:
-
-```bash
 sudo apt install suricata -y
 ```
 
@@ -230,50 +225,42 @@ Verify the installation:
 suricata --version
 ```
 
-### 5.2 Configuring Suricata
+### 5.2 Service Verification
 
-Suricata was configured to monitor the Kali Linux host-only network interface:
-
-| Setting | Configuration |
-|---|---|
-| Operating System | Kali Linux |
-| Monitoring Interface | `eth1` |
-| Interface IP | `192.168.56.101` |
-| Network | `192.168.56.0/24` |
-| Log Format | EVE JSON |
-| Log Location | `/var/log/suricata/eve.json` |
-
-The monitoring interface was selected to allow Suricata to inspect traffic on the SOC lab network.
-
-### 5.3 Starting and Verifying Suricata
-
-Check the Suricata service:
+The Suricata service was checked to confirm that it was running:
 
 ```bash
 sudo systemctl status suricata
 ```
 
-Suricata was confirmed to be **active and running**.
+**Result:** The Suricata service was confirmed as active and running.
 
-The EVE JSON log was checked using:
+### 5.3 EVE JSON Logging
+
+Suricata records network security events in its EVE JSON log file:
+
+```text
+/var/log/suricata/eve.json
+```
+
+The log was inspected using:
 
 ```bash
 sudo tail -n 5 /var/log/suricata/eve.json
 ```
 
-The output confirmed that Suricata was writing network events to the EVE JSON log.
+The captured events included network flow and statistics records. The `in_iface` field showed `eth1`, confirming that the recorded traffic was associated with the lab network interface.
 
-### 5.4 EVE JSON Log Verification
+### 5.4 Event Processing Statistics
 
-The EVE JSON log contained different event types, including:
+The inspected Suricata statistics included:
 
-- `flow` – Network flow information.
-- `stats` – Suricata performance and packet statistics.
-- `alert` – Events generated when traffic matches detection rules.
+- **Rules loaded:** 53,230
+- **Rules failed:** 0
+- **Kernel packet drops:** 0
 
-The log showed traffic being monitored on `eth1`. Suricata statistics also reported loaded detection rules and zero kernel packet drops in the observed sample.
+These results confirmed that Suricata was processing network traffic and writing event data to its EVE JSON log.
 
-**Outcome:** Suricata was successfully deployed on Kali Linux, monitoring the lab interface and generating EVE JSON events for security monitoring and SIEM integration.
 ## 6. Wazuh–Suricata Integration
 
 The next stage involved integrating Suricata with the Wazuh Agent installed on Kali Linux. This allowed Suricata network security events to be collected and forwarded to the Wazuh Manager for centralized monitoring and analysis.
