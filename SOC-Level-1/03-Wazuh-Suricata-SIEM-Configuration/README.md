@@ -69,17 +69,54 @@ This environment provides a controlled platform for testing network activity, co
 
 Wazuh was deployed on the Ubuntu Server (`192.168.56.112`) as the central Security Information and Event Management (SIEM) platform.
 
-The deployment consists of three main components:
+The deployment used the Wazuh all-in-one installation method, placing the following components on the same server:
 
 | Component | Function |
 |---|---|
-| Wazuh Manager | Collects and analyses security events from connected agents. |
-| Wazuh Indexer | Stores and indexes security event data for searching and analysis. |
-| Wazuh Dashboard | Provides a web interface for security monitoring, alert analysis, and investigation. |
+| Wazuh Manager | Receives and analyses security events from connected agents. |
+| Wazuh Indexer | Stores and indexes security data for searching and analysis. |
+| Wazuh Dashboard | Provides the web interface for monitoring, alert analysis, and investigation. |
 
-### Service Verification
+### 3.1 Wazuh Installation Procedure
 
-After installation, I verified that the three Wazuh services were running successfully using:
+The Wazuh installation assistant provides an automated method for deploying the central components on one server.
+
+The following commands document the reproducible installation procedure:
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+Download the Wazuh installation assistant:
+
+```bash
+curl -sO https://packages.wazuh.com/4.14/wazuh-install.sh
+```
+
+Run the all-in-one installation:
+
+```bash
+sudo bash ./wazuh-install.sh -a
+```
+
+**Documentation note:** These commands document the standard installation procedure retrospectively. They are not claimed to be the exact historical commands used during the original deployment.
+
+### 3.2 Installation Verification
+
+The installed Wazuh version was checked using:
+
+```bash
+sudo /var/ossec/bin/wazuh-control info
+```
+
+The verified server version was:
+
+- Wazuh Version: `4.14.9`
+- Revision: `rc2`
+- Installation Type: `server`
+
+The central services were checked using:
 
 ```bash
 sudo systemctl status wazuh-manager wazuh-indexer wazuh-dashboard
@@ -87,7 +124,7 @@ sudo systemctl status wazuh-manager wazuh-indexer wazuh-dashboard
 
 All three services were confirmed as active on the Ubuntu Server.
 
-This established the central SIEM infrastructure for receiving and investigating security telemetry from the lab environment.
+**Outcome:** Successfully established the central Wazuh SIEM infrastructure for collecting, indexing, and investigating security telemetry from the lab endpoints.
 ## 4. Wazuh Agent Installation and Configuration
 
 Wazuh agents were deployed on Kali Linux and Ubuntu Desktop to collect endpoint logs and forward security events to the Wazuh Manager running on Ubuntu Server.
