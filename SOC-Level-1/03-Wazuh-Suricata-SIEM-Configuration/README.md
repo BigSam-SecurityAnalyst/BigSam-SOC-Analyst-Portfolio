@@ -21,7 +21,7 @@ The lab consists of multiple virtual machines configured to support security mon
 ### Virtualization Platform
 
 - **Platform:** Oracle VirtualBox
-- **Network:** Host-Only Network
+- **Primary Lab Network:** VirtualBox Host-Only Network (192.168.56.0/24). Kali Linux also uses a NAT adapter to provide internet connectivity and acts as the gateway for Ubuntu Desktop and Ubuntu Server.
 - **Lab subnet:** `192.168.56.0/24`
 - **Gateway:** Kali Linux (`192.168.56.101`) for Ubuntu Desktop and Ubuntu Server.
 
@@ -270,7 +270,7 @@ The captured events included network flow and statistics records. The `in_iface`
 
 The inspected Suricata statistics included:
 
-- **Rules loaded:** 53,230
+- **Rules loaded:** 53,231
 - **Rules failed:** 0
 - **Kernel packet drops:** 0
 
