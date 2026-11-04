@@ -298,3 +298,42 @@ These were informational detection events and were not automatically classified 
 The integration was successful. Suricata generated network security events on Kali Linux, the Wazuh Agent collected the events from `eve.json`, and the Wazuh Dashboard displayed them for centralized monitoring.
 
 **Key Takeaway:** This exercise provided hands-on experience integrating an open-source IDS with a SIEM, configuring JSON log collection, forwarding security events, and validating detection visibility through a centralized security monitoring dashboard.
+## 7. Final Integration Verification and Results
+
+After completing the Wazuh and Suricata integration, validation was performed to confirm that the SOC monitoring environment was operational.
+
+### 7.1 Verification Summary
+
+| Component | Verification | Result |
+|---|---|---|
+| Wazuh Manager | Checked manager, indexer, and dashboard services | Active |
+| Kali Linux Agent | Checked agent version and service status | Active, version 4.14.9 |
+| Ubuntu Desktop Agent | Checked agent version and service status | Active, version 4.14.9 |
+| Suricata IDS | Checked service status | Active |
+| Suricata EVE JSON | Inspected `/var/log/suricata/eve.json` | Events generated |
+| Wazuh–Suricata Integration | Searched for Suricata events in Wazuh Threat Hunting | Events received and displayed |
+
+### 7.2 Evidence from the Wazuh Dashboard
+
+The Wazuh Dashboard was used to review events from the Kali Linux agent.
+
+The investigation returned 51 event hits within the selected Last 24 Hours time range. Suricata-generated alerts were visible, including:
+
+- `ET INFO Spotify P2P Client`
+- `ET INFO Possible Kali Linux hostname in DHCP Request Packet`
+
+The displayed events included Wazuh rule ID `86601`, with a severity level of `3`.
+
+These informational alerts demonstrated that Suricata events were successfully reaching the Wazuh monitoring platform.
+
+### 7.3 Final Project Outcome
+
+The SOC home lab successfully demonstrated:
+
+1. Deployment of a centralized Wazuh SIEM environment.
+2. Installation and connection of Linux endpoint agents.
+3. Deployment of Suricata as a network intrusion detection system.
+4. Configuration of Wazuh to collect Suricata EVE JSON logs.
+5. Centralized visibility of Suricata-generated events through the Wazuh Dashboard.
+
+**Conclusion:** This project established a functional home-based SOC monitoring environment using open-source security tools. It provided practical experience in SIEM deployment, endpoint monitoring, network intrusion detection, log collection, event forwarding, and security event analysis.
