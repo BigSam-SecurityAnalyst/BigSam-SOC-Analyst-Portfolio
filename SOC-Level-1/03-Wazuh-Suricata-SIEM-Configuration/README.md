@@ -88,3 +88,86 @@ sudo systemctl status wazuh-manager wazuh-indexer wazuh-dashboard
 All three services were confirmed as active on the Ubuntu Server.
 
 This established the central SIEM infrastructure for receiving and investigating security telemetry from the lab environment.
+## 4. Wazuh Agent Installation and Configuration
+
+Wazuh agents were deployed on Kali Linux and Ubuntu Desktop to collect endpoint logs and forward security events to the Wazuh Manager running on Ubuntu Server.
+
+### 4.1 Agent Deployment Environment
+
+| Endpoint | IP Address | Wazuh Agent Version | Role |
+|---|---|---|---|
+| Kali Linux | `192.168.56.101` | `4.14.9` | Suricata log collection |
+| Ubuntu Desktop | `192.168.56.111` | `4.14.9` | Endpoint monitoring |
+| Ubuntu Server | `192.168.56.112` | `4.14.9` | Wazuh Manager |
+
+### 4.2 Adding the Wazuh APT Repository
+
+The Wazuh repository and signing key were configured on the Linux endpoints to allow installation and management of the Wazuh Agent package.
+
+```bash
+sudo apt update
+sudo apt install curl gnupg apt-transport-https -y
+```
+
+Import the Wazuh repository signing key:
+
+```bash
+curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | \
+sudo gpg --no-default-keyring \
+--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import
+
+sudo chmod 644 /usr/share/keyrings/wazuh.gpg
+```
+
+Add the Wazuh repository:
+
+```bash
+echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | \
+sudo tee /etc/apt/sources.list.d/wazuh.list
+
+sudo apt update
+```
+
+### 4.3 Installing and Configuring the Agent
+
+The Wazuh Agent was installed and configured to communicate with the Wazuh Manager at `192.168.56.112`.
+
+```bash
+sudo WAZUH_MANAGER="192.168.56.112" apt install wazuh-agent
+```
+
+Enable and start the agent service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable wazuh-agent
+sudo systemctl start wazuh-agent
+```
+
+### 4.4 Agent Verification
+
+The agent service and installed version were checked using:
+
+```bash
+sudo systemctl status wazuh-agent
+sudo /var/ossec/bin/wazuh-control info
+```
+
+The deployed agents were verified as Wazuh version `4.14.9` (revision `rc2`).
+
+### 4.5 Ubuntu Desktop Agent Upgrade and Repository Troubleshooting
+
+During verification, the Ubuntu Desktop endpoint was initially running Wazuh Agent `4.14.6`, while the other components were on `4.14.9`.
+
+Investigation revealed that the Wazuh APT repository was disabled. The repository was enabled, the Wazuh signing key was imported, and the `Signed-By` repository configuration was corrected.
+
+The agent was then upgraded using:
+
+```bash
+sudo apt update
+sudo apt install wazuh-agent=4.14.9-1
+```
+
+The upgrade was verified with the Wazuh version command and systemd service status. The agent reported version `4.14.9` and its service was active and running.
+
+**Outcome:** The Wazuh Manager and both Linux agents were aligned on version `4.14.9`, providing a consistent SIEM deployment across the lab endpoints.
