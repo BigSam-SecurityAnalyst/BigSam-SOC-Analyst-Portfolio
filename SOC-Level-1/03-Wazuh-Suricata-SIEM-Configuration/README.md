@@ -123,8 +123,23 @@ sudo systemctl status wazuh-manager wazuh-indexer wazuh-dashboard
 ```
 
 All three services were confirmed as active on the Ubuntu Server.
-
 **Outcome:** Successfully established the central Wazuh SIEM infrastructure for collecting, indexing, and investigating security telemetry from the lab endpoints.
+
+### 3.3 Retrieving Wazuh Dashboard Login Credentials
+
+During the Wazuh installation, the installation script automatically generated administrator credentials for dashboard access.
+
+To retrieve the generated credentials, the following command was executed on the Ubuntu Server:
+
+```bash
+sudo tar -O -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt
+```
+
+The command extracts and displays the generated credentials, including the `admin` username and password.
+
+These credentials were then used to authenticate and access the Wazuh Dashboard through a web browser.
+
+**Security Note:** Administrator credentials were kept private and excluded from the GitHub repository.
 ## 4. Wazuh Agent Installation and Configuration
 
 Wazuh Agents were deployed on Kali Linux and Ubuntu Desktop to collect endpoint security data and forward events to the central Wazuh Manager running on Ubuntu Server (`192.168.56.112`).
