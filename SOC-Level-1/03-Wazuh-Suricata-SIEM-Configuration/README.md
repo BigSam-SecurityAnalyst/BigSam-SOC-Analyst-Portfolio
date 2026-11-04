@@ -171,3 +171,71 @@ sudo apt install wazuh-agent=4.14.9-1
 The upgrade was verified with the Wazuh version command and systemd service status. The agent reported version `4.14.9` and its service was active and running.
 
 **Outcome:** The Wazuh Manager and both Linux agents were aligned on version `4.14.9`, providing a consistent SIEM deployment across the lab endpoints.
+## 5. Suricata Installation and Configuration
+
+Suricata was deployed on Kali Linux as the Network Intrusion Detection System (NIDS) for the SOC home lab. It monitors network traffic on the host-only interface and generates security events in JSON format.
+
+### 5.1 Installing Suricata
+
+Update the Kali package repositories:
+
+```bash
+sudo apt update
+```
+
+Install Suricata:
+
+```bash
+sudo apt install suricata -y
+```
+
+Verify the installation:
+
+```bash
+suricata --version
+```
+
+### 5.2 Configuring Suricata
+
+Suricata was configured to monitor the Kali Linux host-only network interface:
+
+| Setting | Configuration |
+|---|---|
+| Operating System | Kali Linux |
+| Monitoring Interface | `eth1` |
+| Interface IP | `192.168.56.101` |
+| Network | `192.168.56.0/24` |
+| Log Format | EVE JSON |
+| Log Location | `/var/log/suricata/eve.json` |
+
+The monitoring interface was selected to allow Suricata to inspect traffic on the SOC lab network.
+
+### 5.3 Starting and Verifying Suricata
+
+Check the Suricata service:
+
+```bash
+sudo systemctl status suricata
+```
+
+Suricata was confirmed to be **active and running**.
+
+The EVE JSON log was checked using:
+
+```bash
+sudo tail -n 5 /var/log/suricata/eve.json
+```
+
+The output confirmed that Suricata was writing network events to the EVE JSON log.
+
+### 5.4 EVE JSON Log Verification
+
+The EVE JSON log contained different event types, including:
+
+- `flow` – Network flow information.
+- `stats` – Suricata performance and packet statistics.
+- `alert` – Events generated when traffic matches detection rules.
+
+The log showed traffic being monitored on `eth1`. Suricata statistics also reported loaded detection rules and zero kernel packet drops in the observed sample.
+
+**Outcome:** Suricata was successfully deployed on Kali Linux, monitoring the lab interface and generating EVE JSON events for security monitoring and SIEM integration.
