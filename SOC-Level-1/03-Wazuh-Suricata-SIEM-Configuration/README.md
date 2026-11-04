@@ -337,3 +337,37 @@ The SOC home lab successfully demonstrated:
 5. Centralized visibility of Suricata-generated events through the Wazuh Dashboard.
 
 **Conclusion:** This project established a functional home-based SOC monitoring environment using open-source security tools. It provided practical experience in SIEM deployment, endpoint monitoring, network intrusion detection, log collection, event forwarding, and security event analysis.
+## 8. Skills Demonstrated and Key Takeaways
+
+### 8.1 Technical Skills Demonstrated
+
+Through this project, I gained practical experience in the following areas:
+
+- **SIEM Deployment:** Installed and configured Wazuh Manager, Indexer, and Dashboard.
+- **Endpoint Monitoring:** Deployed and configured Wazuh Agents on Kali Linux and Ubuntu Desktop.
+- **Linux Administration:** Worked with APT package management, systemd services, configuration files, and Linux troubleshooting.
+- **Network Intrusion Detection:** Installed and configured Suricata to monitor network traffic.
+- **Log Collection and Analysis:** Worked with Suricata EVE JSON logs and configured Wazuh to collect security events.
+- **SIEM Integration:** Integrated Suricata with Wazuh for centralized security event monitoring.
+- **Security Event Investigation:** Used Wazuh Threat Hunting to review and interpret Suricata-generated events.
+- **Troubleshooting:** Resolved Wazuh repository signing and package-version issues during agent maintenance.
+
+### 8.2 Tools and Technologies
+
+| Tool | Purpose |
+|---|---|
+| Wazuh | Security Information and Event Management (SIEM) |
+| Suricata | Network Intrusion Detection System (IDS) |
+| Kali Linux | Security testing and monitoring environment |
+| Ubuntu Server | Wazuh Manager, Indexer, and Dashboard |
+| Ubuntu Desktop | Monitored endpoint |
+| VirtualBox | Virtualized SOC lab environment |
+| Linux CLI | Installation, configuration, and troubleshooting |
+
+### 8.3 Key Takeaways
+
+This project strengthened my understanding of how security monitoring components work together in a Security Operations Center (SOC).
+
+I learned how to deploy a SIEM platform, connect monitored endpoints, configure an IDS to generate network security events, forward logs to a central monitoring platform, and investigate the resulting events.
+
+Most importantly, I gained hands-on experience building and troubleshooting a multi-machine SOC home lab using open-source security technologies.
